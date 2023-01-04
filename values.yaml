@@ -1,1 +1,66 @@
 checkoutserviceVersion:67
+
+currencyService:
+  create: true
+  name: currencyservice
+
+emailService:
+  create: true
+  name: emailservice
+
+frontend:
+  create: true
+  name: frontend
+  externalService: true
+  cymbalBranding: false
+  # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
+  platform: local
+  singleSharedSession: false
+  virtualService:
+    create: false
+    hosts:
+    - "*"
+    gateway:
+      name: asm-ingressgateway
+      namespace: asm-ingress
+      labelKey: asm
+      labelValue: ingressgateway
+
+loadGenerator:
+  create: true
+  name: loadgenerator
+  checkFrontendInitContainer: true
+
+paymentService:
+  create: true
+  name: paymentservice
+
+productCatalogService:
+  create: true
+  name: productcatalogservice
+  # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
+  extraLatency: ""
+
+recommendationService:
+  create: true
+  name: recommendationservice
+
+shippingService:
+  create: true
+  name: shippingservice
+
+cartDatabase:
+  # Specifies the type of the cartservice's database, could be either redis or spanner.
+  type: redis
+  connectionString: "redis-cart:6379"
+  inClusterRedis:
+    create: true
+    name: redis-cart
+    # Uses the public redis image from Docker Hub, otherwise will use the images.repository.
+    publicRepository: true
+  externalRedisTlsOrigination:
+    enable: false
+    name: exernal-redis-tls-origination
+    endpointAddress: ""
+    endpointPort: ""
+    certificate: ""
