@@ -1,66 +1,82 @@
-checkoutserviceVersion: 67
+# Default values for test.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-currencyService:
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
   create: true
-  name: currencyservice
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-emailService:
-  create: true
-  name: emailservice
+podAnnotations: {}
 
-frontend:
-  create: true
-  name: frontend
-  externalService: true
-  cymbalBranding: false
-  # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
-  platform: local
-  singleSharedSession: false
-  virtualService:
-    create: false
-    hosts:
-    - "*"
-    gateway:
-      name: asm-ingressgateway
-      namespace: asm-ingress
-      labelKey: asm
-      labelValue: ingressgateway
+podSecurityContext: {}
+  # fsGroup: 2000
 
-loadGenerator:
-  create: true
-  name: loadgenerator
-  checkFrontendInitContainer: true
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
-paymentService:
-  create: true
-  name: paymentservice
+service:
+  type: ClusterIP
+  port: 80
 
-productCatalogService:
-  create: true
-  name: productcatalogservice
-  # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
-  extraLatency: ""
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
-recommendationService:
-  create: true
-  name: recommendationservice
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
-shippingService:
-  create: true
-  name: shippingservice
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
-cartDatabase:
-  # Specifies the type of the cartservice's database, could be either redis or spanner.
-  type: redis
-  connectionString: "redis-cart:6379"
-  inClusterRedis:
-    create: true
-    name: redis-cart
-    # Uses the public redis image from Docker Hub, otherwise will use the images.repository.
-    publicRepository: true
-  externalRedisTlsOrigination:
-    enable: false
-    name: exernal-redis-tls-origination
-    endpointAddress: ""
-    endpointPort: ""
-    certificate: ""
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
