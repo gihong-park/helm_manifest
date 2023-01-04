@@ -1,82 +1,123 @@
-# Default values for test.
+# Default values for onlineboutique.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+images:
+  repository: gcr.io/google-samples/microservices-demo
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: ""
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+serviceAccounts:
+  # Specifies whether service accounts should be created.
+  create: false
+  # Annotations to add to the service accounts.
+  annotations: {}
+  # Annotations to add only for the cartservice app. This allows to follow the least privilege principle where only cartservice needs to connect to external database for example via Workload Identity.
+  annotationsOnlyForCartservice: false
 
-serviceAccount:
-  # Specifies whether a service account should be created
+# Specifies if the livenessProbe and readinessProbe are using the native gRPC support with Kubernetes 1.24.
+nativeGrpcHealthCheck: false
+
+networkPolicies:
+  # Specifies if the NetworkPolicies are created or not. If true, one fine granular NetworkPolicy per app is created.
+  create: false
+
+sidecars:
+  # Specifies if the Sidecars are created or not. If true, one fine granular Sidecar per app is created.
+  create: false
+
+authorizationPolicies:
+  # Specifies if the AuthorizationPolicies are created or not. If true, one fine granular AuthorizationPolicy per app is created.
+  create: false
+
+opentelemetryCollector:
+  create: false
+  name: opentelemetrycollector
+  # Specifies the project id for the otel collector. If set as "PROJECT_ID" (default value), an initContainer will automatically retrieve the project id value from the metadata server.
+  projectId: "PROJECT_ID"
+
+googleCloudOperations:
+  profiler: false
+  tracing: false
+  metrics: false
+
+seccompProfile:
+  enable: false
+  type: RuntimeDefault
+
+adService:
   create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: adservice
 
-podAnnotations: {}
+cartService:
+  create: true
+  name: cartservice
 
-podSecurityContext: {}
-  # fsGroup: 2000
+checkoutService:
+  create: true
+  name: checkoutservice
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+currencyService:
+  create: true
+  name: currencyservice
 
-service:
-  type: ClusterIP
-  port: 80
+emailService:
+  create: true
+  name: emailservice
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+frontend:
+  create: true
+  name: frontend
+  externalService: true
+  cymbalBranding: false
+  # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
+  platform: local
+  singleSharedSession: false
+  virtualService:
+    create: false
+    hosts:
+    - "*"
+    gateway:
+      name: asm-ingressgateway
+      namespace: asm-ingress
+      labelKey: asm
+      labelValue: ingressgateway
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+loadGenerator:
+  create: true
+  name: loadgenerator
+  checkFrontendInitContainer: true
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+paymentService:
+  create: true
+  name: paymentservice
 
-nodeSelector: {}
+productCatalogService:
+  create: true
+  name: productcatalogservice
+  # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
+  extraLatency: ""
 
-tolerations: []
+recommendationService:
+  create: true
+  name: recommendationservice
 
-affinity: {}
+shippingService:
+  create: true
+  name: shippingservice
+
+cartDatabase:
+  # Specifies the type of the cartservice's database, could be either redis or spanner.
+  type: redis
+  connectionString: "redis-cart:6379"
+  inClusterRedis:
+    create: true
+    name: redis-cart
+    # Uses the public redis image from Docker Hub, otherwise will use the images.repository.
+    publicRepository: true
+  externalRedisTlsOrigination:
+    enable: false
+    name: exernal-redis-tls-origination
+    endpointAddress: ""
+    endpointPort: ""
+    certificate: ""
