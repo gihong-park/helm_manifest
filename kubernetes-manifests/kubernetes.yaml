@@ -210,7 +210,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/adservice:13
+        image: docker.io/hongpark/adservice:14
         ports:
         - containerPort: 9555
         env:
@@ -265,7 +265,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/cartservice:13
+        image: docker.io/hongpark/cartservice:14
         ports:
         - containerPort: 7070
         env:
@@ -318,7 +318,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/checkoutservice:13
+        image: docker.io/hongpark/checkoutservice:14
         ports:
         - containerPort: 5050
         readinessProbe:
@@ -381,7 +381,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/currencyservice:13
+        image: docker.io/hongpark/currencyservice:14
         ports:
         - name: grpc
           containerPort: 7000
@@ -435,7 +435,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/emailservice:13
+        image: docker.io/hongpark/emailservice:14
         ports:
         - containerPort: 8080
         env:
@@ -491,7 +491,7 @@ spec:
                 - all
             privileged: false
             readOnlyRootFilesystem: true
-          image: docker.io/hongpark/frontend:13
+          image: docker.io/hongpark/frontend:14
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -599,7 +599,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/loadgenerator:13
+        image: docker.io/hongpark/loadgenerator:14
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"
@@ -644,7 +644,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/paymentservice:13
+        image: docker.io/hongpark/paymentservice:14
         ports:
         - containerPort: 50051
         env:
@@ -697,7 +697,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/productcatalogservice:13
+        image: docker.io/hongpark/productcatalogservice:14
         ports:
         - containerPort: 3550
         env:
@@ -752,7 +752,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/recommendationservice:13
+        image: docker.io/hongpark/recommendationservice:14
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -863,7 +863,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: docker.io/hongpark/shippingservice:13
+        image: docker.io/hongpark/shippingservice:14
         ports:
         - containerPort: 50051
         env:
